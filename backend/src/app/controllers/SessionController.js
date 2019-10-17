@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
+import authConfig from '../../config/auth';
 
 class SessionController {
   async store(req, res) {
@@ -11,7 +12,7 @@ class SessionController {
       return res.status(401).json({ error: 'User not found' });
     }
 
-    if (!(await User.checkPassword(password))) {
+    if (!(await user.checkPassword(password))) {
       return res.status(401).json({ error: 'Password does not match' });
     }
 
@@ -23,8 +24,8 @@ class SessionController {
         name,
         email,
       },
-      token: jwt.sign({ id }, 'a2ca9c9dd6cad81544592993224d4257', {
-        expiresIn: '7d',
+      token: jwt.sign({ id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
       }),
     });
   }
