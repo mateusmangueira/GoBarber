@@ -28,8 +28,7 @@ class UserController {
   }
 
   async update(req, res) {
-    // Completar a logica de atualizar um usuario pelo ID
-    return res.json();
+    return res.json({ ok: true });
   }
 
   async delete(req, res) {
