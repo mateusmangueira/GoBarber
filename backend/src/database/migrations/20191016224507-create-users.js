@@ -3,9 +3,9 @@ module.exports = {
     return queryInterface.createTable('users', {
       id: {
         type: Sequelize.INTEGER,
-        allNull: false,
+        allowNull: false,
         autoIncrement: true,
-        primarykey: true,
+        primaryKey: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -23,7 +23,7 @@ module.exports = {
       provider: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
-        allNull: false,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
