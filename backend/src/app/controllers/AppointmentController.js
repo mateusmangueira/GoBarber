@@ -1,7 +1,9 @@
 import Appointment from '../models/Appointment';
-import { startOfHour, parseISO, isBefore } from 'date-fns';
+import { startOfHour, parseISO, isBefore, format } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import User from '../models/User';
 import File from '../models/File';
+import Notification from '../schemas/Notification';
 import * as Yup from 'yup';
 
 class AppointmentController {
@@ -71,7 +73,7 @@ class AppointmentController {
     //Checha se o provider tem disponibilidade para o agendamento do usuario
     if (checkAvailability) {
       return res.status(400).json({
-        erro: 'Appointment date is not available'
+        error: 'Appointment date is not available'
       })
     }
 
@@ -79,6 +81,18 @@ class AppointmentController {
       user_id: req.userId,
       provider_id,
       date: hourStart,
+    });
+
+
+    //Notificar o prestador do servico
+    const user = await User.findByPk(req.userId);
+    const formattedDate = format(hourStart, "'dia' dd 'de' MMMM', às' H:mm'h", {
+      locale: pt
+    });
+
+    await Notification.create({
+      content: `Novo agendamento de ${user.name} para ${formattedDate}`,
+      user: provider_id,
     });
 
     return res.json(appointment);

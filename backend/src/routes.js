@@ -6,6 +6,7 @@ import ProviderController from './app/controllers/ProviderController';
 import SessionController from './app/controllers/SessionController';
 import AppointmentController from './app/controllers/AppointmentController';
 import ScheduleController from './app/controllers/AppointmentController';
+import NotificationController from './app/controllers/NotificationController';
 import FileController from './app/controllers/FileController';
 import authMiddleware from './app/middlewares/auth';
 
