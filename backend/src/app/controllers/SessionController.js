@@ -15,7 +15,7 @@ class SessionController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation failed' });
+      return res.status(400).json({ error: 'Login validation failed' });
     }
 
     const user = await User.findOne({ where: { email } });

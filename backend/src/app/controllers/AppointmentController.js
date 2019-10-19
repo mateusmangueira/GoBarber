@@ -1,0 +1,61 @@
+import Appointment from '../models/Appointment';
+import { startOfHour, parseISO, isBefore } from 'date-fns';
+import User from '../models/User';
+import * as Yup from 'yup';
+class AppointmentController {
+
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      provider_id: Yup.number().required(),
+      date: Yup.date().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Appointment validation failed' })
+    }
+    const { provider_id, date } = req.body;
+
+    // Checa se o usuario eh realmente um prestador de servico
+    const isProvider = await User.findOne({
+      where: { id: provider_id, provider: true },
+    });
+
+
+    //Se ele n for provider lanca erro.
+    if (!isProvider) {
+      return res.status(401).json({ error: 'You can only create appointments with providers' })
+    }
+
+    const hourStart = startOfHour(parseISO(date));
+
+    //Usa a biblioteca date-fns para checar se a data do agendamento eh realmente no futuro. Nao permite datas passadas. 
+    if (isBefore(hourStart, new Date())) {
+      return res.status(400).json({ error: 'Past dates are not allowed' })
+    }
+
+    const checkAvailability = await Appointment.findOne({
+      where: {
+        provider_id,
+        canceled_at: null,
+        date: hourStart,
+      },
+    })
+
+    //Checha se o provider tem disponibilidade para o agendamento do usuario
+    if (checkAvailability) {
+      return res.status(400).json({
+        erro: 'Appointment date is not available'
+      })
+    }
+
+    const appointment = await Appointment.create({
+      user_id: req.userId,
+      provider_id,
+      date: hourStart,
+    });
+
+    return res.json(appointment);
+  }
+}
+
+export default new AppointmentController();

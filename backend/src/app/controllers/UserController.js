@@ -53,7 +53,7 @@ class UserController {
     // field é a continuação dos atributos de verificação do campo password
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation failed' });
+      return res.status(400).json({ error: 'User validation failed' });
     }
 
     const user = await User.findByPk(req.userId); // ?
