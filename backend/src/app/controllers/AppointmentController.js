@@ -49,8 +49,6 @@ class AppointmentController {
       where: { id: provider_id, provider: true },
     });
 
-    const { provider_id, date } = req.body;
-
     //Provedor de servico nao pode criar agendamento para ele mesmo
     if (provider_id === req.userId) {
       return res
@@ -94,7 +92,7 @@ class AppointmentController {
 
     //Notificar o prestador do servico
     const user = await User.findByPk(req.userId);
-    
+
     const formattedDate = format(hourStart, "'dia' dd 'de' MMMM', às' H:mm'h", {
       locale: pt
     });
