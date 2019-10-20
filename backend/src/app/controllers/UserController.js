@@ -2,12 +2,13 @@ import * as Yup from 'yup';
 import User from '../models/User';
 
 class UserController {
+
   async index(req, res) {
     const users = await User.findAll({
       attributes: ['id', 'name', 'provider'],
     });
     return res.json(users);
-  }
+  };
 
   async store(req, res) {
     // Definindo as regras do objeto (req.body)
@@ -31,7 +32,7 @@ class UserController {
     }
     const { id, name, email, provider } = await User.create(req.body);
     return res.json({ id, name, email, provider });
-  }
+  };
 
   async update(req, res) {
     const schema = Yup.object().shape({
@@ -76,6 +77,11 @@ class UserController {
     const { id, name, provider } = await user.update(req.body);
 
     return res.json({ id, name, email, provider });
-  }
+  };
+
+  async delete(req, res) {
+    return res.json({ ok: true });
+  };
+
 }
 export default new UserController();

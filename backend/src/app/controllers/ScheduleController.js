@@ -4,6 +4,7 @@ import { startOfDay, endOfDay, parseISO } from 'date-fns';
 import { Op } from 'sequelize';
 
 class ScheduleController {
+  
   async index(req, res) {
     const checkUserProvider = await User.findOne({
       where: {
@@ -40,7 +41,8 @@ class ScheduleController {
       order: ['date']
     });
     return res.json(appointments);
-  }
+  };
+  
 }
 
 export default new ScheduleController()
