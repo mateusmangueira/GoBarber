@@ -11,7 +11,6 @@ class AppointmentController {
   async index(req, res) {
     const { page = 1 } = req.query;
 
-
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
@@ -42,22 +41,31 @@ class AppointmentController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Appointment validation failed' })
     }
-    const { provider_id, date } = req.body;
 
     // Checa se o usuario eh realmente um prestador de servico
-    const isProvider = await User.findOne({
+    const { provider_id, date } = req.body;
+
+    const checkIsProvider = await User.findOne({
       where: { id: provider_id, provider: true },
     });
 
+    const { provider_id, date } = req.body;
+
+    //Provedor de servico nao pode criar agendamento para ele mesmo
+    if (provider_id === req.userId) {
+      return res
+        .status(401)
+        .json({ error: 'You cannot create appointments for yourself' });
+    }
 
     //Se ele n for provider lanca erro.
-    if (!isProvider) {
+    if (!checkIsProvider) {
       return res.status(401).json({ error: 'You can only create appointments with providers' })
     }
 
+    //Usa a biblioteca date-fns para checar se a data do agendamento eh realmente no futuro. Nao permite datas passadas. 
     const hourStart = startOfHour(parseISO(date));
 
-    //Usa a biblioteca date-fns para checar se a data do agendamento eh realmente no futuro. Nao permite datas passadas. 
     if (isBefore(hourStart, new Date())) {
       return res.status(400).json({ error: 'Past dates are not allowed' })
     }
@@ -86,6 +94,7 @@ class AppointmentController {
 
     //Notificar o prestador do servico
     const user = await User.findByPk(req.userId);
+    
     const formattedDate = format(hourStart, "'dia' dd 'de' MMMM', às' H:mm'h", {
       locale: pt
     });
