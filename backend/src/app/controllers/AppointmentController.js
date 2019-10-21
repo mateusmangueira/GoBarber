@@ -5,7 +5,6 @@ import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
 import Notification from '../schemas/Notification';
-
 import Mail from '../../lib/Mail';
 
 class AppointmentController {
@@ -127,7 +126,7 @@ class AppointmentController {
           as: 'user',
           attributes: ['name'],
         },
-      ]
+      ],
     });
 
     if (appointment.user_id !== req.userId) {
@@ -138,30 +137,31 @@ class AppointmentController {
 
     // O usuario so pode cancelar com 2 horas de antecedencia
     const dateWithSub = subHours(appointment.date, 2);
-    if (isBefore(dateWithSub, new Date())) {
-      res.status(401).json({
+    const NOW = new Date();
+    if (isBefore(dateWithSub, NOW)) {
+      return res.status(401).json({
         error: "You can only cancel appointments within 2 hours in advance",
       });
-
-      appointment.canceled_at = new Date();
-
-      await appointment.save();
-
-      await Mail.sendMail({
-        to: `${appointment.provider.name} <${appointment.provider.email}>`,
-        subject: 'Agendamento Cancelado',
-        tempatle: 'cancelation',
-        context: {
-          provider: appointment.provider.name,
-          user: appointment.user.name,
-          date: format(hourStart, "'dia' dd 'de' MMMM', às' H:mm'h", {
-            locale: pt
-          }),
-        },
-      })
-      return res.json(appointment);
     }
-  };
+
+    appointment.canceled_at = NOW;
+
+    await appointment.save();
+
+    await Mail.sendMail({
+      to: `${appointment.provider.name} <${appointment.provider.email}>`,
+      subject: 'Agendamento Cancelado',
+      template: 'cancellation',
+      context: {
+        provider: appointment.provider.name,
+        user: appointment.user.name,
+        date: format(appointment.date, "'dia' dd 'de' MMMM', às' H:mm'h", {
+          locale: pt
+        }),
+      },
+    });
+    return res.json(appointment);
+  }
 }
 
 export default new AppointmentController();
