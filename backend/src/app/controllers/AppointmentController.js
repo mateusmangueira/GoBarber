@@ -1,10 +1,10 @@
-import Appointment from '../models/Appointment';
+import * as Yup from 'yup';
 import { startOfHour, subHours, parseISO, isBefore, format } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
 import Notification from '../schemas/Notification';
-import * as Yup from 'yup';
 
 import Mail from '../../lib/Mail';
 
@@ -14,23 +14,27 @@ class AppointmentController {
     const { page = 1 } = req.query;
 
     const appointments = await Appointment.findAll({
-      where: { user_id: req.userId, canceled_at: null },
+      where: {
+        user_id: req.userId,
+        canceled_at: null
+      },
       order: ['date'],
       attributes: ['id', 'date'],
       limit: 20,
       offset: (page - 1) * 20,
-      include: [{
-        model: User,
-        as: 'provider',
-        attributes: ['id', 'name'],
-        include: [{
-          model: File,
-          as: 'avatar',
-          attributes: ['id', 'path', 'url']
+      include: [
+        {
+          model: User,
+          as: 'provider',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url']
+            }]
         }]
-      }]
     });
-
     return res.json(appointments);
   };
 
@@ -41,26 +45,28 @@ class AppointmentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Appointment validation failed' })
+      return res.status(400).json(
+        { error: 'Appointment validation failed' }
+      );
     }
 
-    // Checa se o usuario eh realmente um prestador de servico
     const { provider_id, date } = req.body;
 
+    // Checa se o usuario eh realmente um prestador de servico
     const checkIsProvider = await User.findOne({
       where: { id: provider_id, provider: true },
     });
 
     //Provedor de servico nao pode criar agendamento para ele mesmo
     if (provider_id === req.userId) {
-      return res
-        .status(401)
-        .json({ error: 'You cannot create appointments for yourself' });
+      return res.status(401).json(
+        { error: 'You cannot create appointments for yourself' });
     }
 
     //Se ele n for provider lanca erro.
     if (!checkIsProvider) {
-      return res.status(401).json({ error: 'You can only create appointments with providers' })
+      return res.status(401).json(
+        { error: 'You can only create appointments with providers' })
     }
 
     //Usa a biblioteca date-fns para checar se a data do agendamento eh realmente no futuro. Nao permite datas passadas. 
@@ -70,6 +76,7 @@ class AppointmentController {
       return res.status(400).json({ error: 'Past dates are not allowed' })
     }
 
+    // Funcao para checar se provider nao tem disponibilidade para o horario passado
     const checkAvailability = await Appointment.findOne({
       where: {
         provider_id,
@@ -92,7 +99,7 @@ class AppointmentController {
     });
 
 
-    //Notificar o prestador do servico
+    //Notificar ao prestador do servico um novo agendamento
     const user = await User.findByPk(req.userId);
 
     const formattedDate = format(hourStart, "'dia' dd 'de' MMMM', às' H:mm'h", {
@@ -114,7 +121,12 @@ class AppointmentController {
           model: User,
           as: 'provider',
           attributes: ['name', 'email'],
-        }
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name'],
+        },
       ]
     });
 
@@ -140,7 +152,6 @@ class AppointmentController {
         subject: 'Agendamento cancelado',
         text: 'Você tem um novo cancelamento',
       })
-
       return res.json(appointment);
     }
   };
