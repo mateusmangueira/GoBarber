@@ -13,6 +13,12 @@ class Appointment extends Model {
             return isBefore(this.date, new Date());
           },
         },
+        cancelable: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return isBefore(new Date(), subHours(this.date, 2));
+          }
+        }
       },
       {
         sequelize,
