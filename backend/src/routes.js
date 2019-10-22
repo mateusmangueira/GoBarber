@@ -22,7 +22,7 @@ routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
 routes.get('/providers', ProviderController.index);
-routes.get('/providers/:id/available', AvailableController.index);
+routes.get('/providers/:providerId/available', AvailableController.index);
 routes.post('/appointments', AppointmentController.store);
 routes.get('/appointments', AppointmentController.index);
 routes.delete('/appointments/:id', AppointmentController.delete);
