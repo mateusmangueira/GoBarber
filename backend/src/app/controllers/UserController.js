@@ -69,7 +69,7 @@ class UserController {
       }
     }
 
-    // Verificar se a oldPassword bate com a senha anterior
+    // Verificar se a senha passada eh igual a senha anterior
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
       return res.status(401).json({ error: 'Old password is invalid' });
     }
@@ -80,8 +80,7 @@ class UserController {
   };
 
   async delete(req, res) {
-    return res.json({ ok: true });
-  };
-
+    return res.json({});
+  }
 }
 export default new UserController();

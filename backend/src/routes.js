@@ -21,6 +21,7 @@ routes.post('/sessions', SessionController.store);
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update);
+routes.delete('/users/:id', UserController.delete);
 routes.get('/providers', ProviderController.index);
 routes.get('/providers/:providerId/available', AvailableController.index);
 routes.post('/appointments', AppointmentController.store);
