@@ -1,7 +1,7 @@
 import 'dotenv/config';
-
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
 import Youch from 'youch';
 import * as Sentry from '@sentry/node';
 import 'express-async-errors';
@@ -23,6 +23,8 @@ class App {
   middlewares() {
     //Esse middleware do Sentry tem q vir antes de qualquer outro middleware do backend
     this.server.use(Sentry.Handlers.requestHandler());
+    //Cors permite que aplicacoes com o endereco passado como parametro acesse a API
+    this.server.use(cors());
     this.server.use(express.json());
     this.server.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
     );
