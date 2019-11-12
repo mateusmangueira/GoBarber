@@ -4,6 +4,6 @@ import React from 'react';
 
 export default function SingUp() {
   return (
-    <div />
+    <h1>Hello SingUp</h1>
   );
 }
