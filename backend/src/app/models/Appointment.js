@@ -17,8 +17,8 @@ class Appointment extends Model {
           type: Sequelize.VIRTUAL,
           get() {
             return isBefore(new Date(), subHours(this.date, 2));
-          }
-        }
+          },
+        },
       },
       {
         sequelize,
@@ -32,6 +32,5 @@ class Appointment extends Model {
     this.belongsTo(models.User, { foreignKey: 'provider_id', as: 'provider' });
   }
 }
-
 
 export default Appointment;

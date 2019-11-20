@@ -1,8 +1,6 @@
 import * as Yup from 'yup';
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
-
 import pt from 'date-fns/locale/pt-BR';
-
 import User from '../models/User';
 import File from '../models/File';
 import Appointment from '../models/Appointment';
@@ -48,7 +46,7 @@ class AppointmentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Appointment validation failed' });
+      return res.status(400).json({ error: 'Validation fails' });
     }
 
     const { provider_id, date } = req.body;
@@ -66,7 +64,7 @@ class AppointmentController {
     if (req.userId === provider_id) {
       return res
         .status(401)
-        .json({ error: "Providers cannot create appointments for themselves" });
+        .json({ error: "Providers can't create appointments with themselves" });
     }
 
     const hourStart = startOfHour(parseISO(date));
@@ -126,13 +124,13 @@ class AppointmentController {
 
     if (!appointment) {
       return res.status(401).json({
-        error: "Appointment not found, so it cannot be canceled",
+        error: "Appointment not found, so it can't be canceled",
       });
     }
 
     if (appointment.user_id !== req.userId) {
       return res.status(401).json({
-        error: "You do not have permission to cancel this appointment",
+        error: "You don't have permission to cancel this appointment",
       });
     }
 
