@@ -9,7 +9,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 30px;
-  
+
     input {
       background: rgba(0, 0, 0, 0.1);
       border: 0;
@@ -50,7 +50,7 @@ export const Container = styled.div`
 
       &:hover {
        background: ${darken(0.07, '#3b9eff')};
-      } 
+      }
     }
    }
 
@@ -67,6 +67,6 @@ export const Container = styled.div`
 
       &:hover {
        background: ${darken(0.08, '#f64c75')};
-      } 
+      }
     }
 `;

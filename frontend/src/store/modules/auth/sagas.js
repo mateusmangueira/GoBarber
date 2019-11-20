@@ -37,7 +37,7 @@ export function* signUp({ payload }) {
       password,
       provider: true,
     });
-
+    toast.success('Sua conta foi criada com sucesso');
     history.push('/');
   } catch (error) {
     toast.error('Falha no cadastro, verifique os dados');
@@ -48,7 +48,7 @@ export function* signUp({ payload }) {
 export function setToken({ payload }) {
 
   if (!payload) return;
- 
+
   const { token } = payload.auth;
 
   if (token) {
