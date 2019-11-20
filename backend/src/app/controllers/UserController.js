@@ -36,11 +36,10 @@ class UserController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      nome: Yup.string(),
+      name: Yup.string(),
       email: Yup.string().email(),
-      oldPassword: Yup.string().min(6),
+      oldpassword: Yup.string().min(6),
       password: Yup.string()
-        .required()
         .min(6)
         .when('oldPassword', (oldPassword, field) =>
           oldPassword ? field.required() : field
@@ -49,42 +48,46 @@ class UserController {
         password ? field.required().oneOf([Yup.ref('password')]) : field
       ),
     });
-    // when é uma validação condicional
-    // primeiro param é a condição
-    // field é a continuação dos atributos de verificação do campo password
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'User validation failed' });
+      return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const user = await User.findByPk(req.userId); // ?
-    // Atributos que precisam de mais alguma etapa de verificação
     const { email, oldPassword } = req.body;
+    const user = await User.findByPk(req.userId);
 
-    // Se for inserido um email diferente (quiser ser alterado)
     if (email !== user.email) {
-      const userExists = await User.findOne({ where: { email } });
+      const userExists = await User.findOne({
+        where: { email },
+      });
+
       if (userExists) {
-        return res.status(400).json({ message: 'User already exist' });
+        return res.status(400).json({ error: 'User already exists' });
       }
     }
 
-    // Verificar se a senha passada eh igual a senha anterior
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
-      return res.status(401).json({ error: 'Old password is invalid' });
+      return res.status(401).json({ error: 'Passwords does not match' });
     }
 
     await user.update(req.body);
 
     const { id, name, avatar } = await User.findByPk(req.userId, {
-      include: [{
-        mode: File,
-        as: 'avatar',
-        attributes: ['id', 'path', 'url'],
-      }],
-    })
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
 
-    return res.json({ id, name, email, avatar });
+    return res.json({
+      id,
+      name,
+      email,
+      avatar,
+    });
   }
 
   async delete(req, res) {
