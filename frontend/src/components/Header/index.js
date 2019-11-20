@@ -23,7 +23,7 @@ export default function Header() {
             </div>
             <img
               src="https://api.adorable.io/avatars/50/abott@adorable.png"
-              alt="AvatarPerfil" />
+              alt="avatarperfil" />
           </Profile>
         </aside>
       </Content>

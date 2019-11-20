@@ -17,6 +17,7 @@ export function* signIn({ payload }) {
       toast.error('Usuário não é um prestador de serviço');
       return;
     }
+
     yield put(signInSuccess(token, user))
 
     history.push('/dashboard');
@@ -56,8 +57,14 @@ export function setToken({ payload }) {
   }
 }
 
+export function signOut() {
+  history.push('/');
+  toast.info('Sessão encerrada com sucesso!');
+}
+
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
   takeLatest('@auth/SIGN_UP_REQUEST', signUp),
+  takeLatest('@auth/SIGN_OUT', signOut),
 ]);

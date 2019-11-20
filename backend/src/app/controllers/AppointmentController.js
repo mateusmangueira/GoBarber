@@ -1,26 +1,27 @@
 import * as Yup from 'yup';
-import { startOfHour, subHours, parseISO, isBefore, format } from 'date-fns';
+import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
+
 import pt from 'date-fns/locale/pt-BR';
-import Appointment from '../models/Appointment';
+
 import User from '../models/User';
 import File from '../models/File';
+import Appointment from '../models/Appointment';
 import Notification from '../schemas/Notification';
-import Queue from '../../lib/Queue';
+
 import CancellationMail from '../jobs/CancellationMail';
+import Queue from '../../lib/Queue';
 
 class AppointmentController {
   async index(req, res) {
     const { page = 1 } = req.query;
+    const LIMIT = 20;
 
     const appointments = await Appointment.findAll({
-      where: {
-        user_id: req.userId,
-        canceled_at: null,
-      },
+      where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
       attributes: ['id', 'date', 'past', 'cancelable'],
-      limit: 20,
-      offset: (page - 1) * 20,
+      limit: LIMIT,
+      offset: (page - 1) * LIMIT,
       include: [
         {
           model: User,
@@ -36,6 +37,7 @@ class AppointmentController {
         },
       ],
     });
+
     return res.json(appointments);
   }
 
@@ -51,33 +53,28 @@ class AppointmentController {
 
     const { provider_id, date } = req.body;
 
-    // Checa se o usuario eh realmente um prestador de servico
     const checkIsProvider = await User.findOne({
       where: { id: provider_id, provider: true },
     });
 
-    // Provedor de servico nao pode criar agendamento para ele mesmo
-    if (provider_id === req.userId) {
-      return res
-        .status(401)
-        .json({ error: 'You cannot create appointments for yourself' });
-    }
-
-    // Se ele n for provider lanca erro.
     if (!checkIsProvider) {
       return res
         .status(401)
         .json({ error: 'You can only create appointments with providers' });
     }
 
-    // Usa a biblioteca date-fns para checar se a data do agendamento eh realmente no futuro. Nao permite datas passadas.
+    if (req.userId === provider_id) {
+      return res
+        .status(401)
+        .json({ error: "Providers cannot create appointments for themselves" });
+    }
+
     const hourStart = startOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date())) {
-      return res.status(400).json({ error: 'Past dates are not allowed' });
+      return res.status(400).json({ error: 'Past dates are not permitted' });
     }
 
-    // Funcao para checar se provider nao tem disponibilidade para o horario passado
     const checkAvailability = await Appointment.findOne({
       where: {
         provider_id,
@@ -86,28 +83,25 @@ class AppointmentController {
       },
     });
 
-    // Checha se o provider tem disponibilidade para o agendamento do usuario
     if (checkAvailability) {
-      return res.status(400).json({
-        error: 'Appointment date is not available',
-      });
+      return res
+        .status(400)
+        .json({ error: 'Appointment date is not available' });
     }
 
     const appointment = await Appointment.create({
       user_id: req.userId,
       provider_id,
-      date: hourStart,
+      date,
     });
 
-    // Notificar ao prestador do servico um novo agendamento
     const user = await User.findByPk(req.userId);
-
-    const formattedDate = format(hourStart, "'dia' dd 'de' MMMM', às' H:mm'h", {
+    const formattedDate = format(hourStart, "dd 'de' MMMM, 'às' H:mm'h'", {
       locale: pt,
     });
 
     await Notification.create({
-      content: `Novo agendamento de ${user.name} para ${formattedDate}`,
+      content: `Novo agendamento de ${user.name} para dia ${formattedDate}`,
       user: provider_id,
     });
 
@@ -130,28 +124,34 @@ class AppointmentController {
       ],
     });
 
+    if (!appointment) {
+      return res.status(401).json({
+        error: "Appointment not found, so it cannot be canceled",
+      });
+    }
+
     if (appointment.user_id !== req.userId) {
       return res.status(401).json({
-        error: 'You are not allowed to cancel this appointment.',
+        error: "You do not have permission to cancel this appointment",
       });
     }
 
-    // O usuario so pode cancelar com 2 horas de antecedencia
     const dateWithSub = subHours(appointment.date, 2);
-    const NOW = new Date();
-    if (isBefore(dateWithSub, NOW)) {
+
+    if (isBefore(dateWithSub, new Date())) {
       return res.status(401).json({
-        error: 'You can only cancel appointments within 2 hours in advance',
+        error: 'You can only cancel appointments 2 hours in advance.',
       });
     }
 
-    appointment.canceled_at = NOW;
+    appointment.canceled_at = new Date();
 
     await appointment.save();
 
     await Queue.add(CancellationMail.key, {
       appointment,
     });
+
     return res.json(appointment);
   }
 }

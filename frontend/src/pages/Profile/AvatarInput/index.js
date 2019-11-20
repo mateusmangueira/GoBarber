@@ -19,9 +19,9 @@ export default function AvatarInput() {
         path: 'dataset.file',
       });
     }
-  }, [ref, registerField]);
+  }, [ref.current]);
 
-  async function handleChange(e) {
+  async function handleChangeImage(e) {
     const data = new FormData();
     data.append('file', e.target.files[0]);
 
@@ -40,7 +40,7 @@ export default function AvatarInput() {
           src={
             preview || 'https://api.adorable.io/avatars/180/abott@adorable.png'
           }
-          alt="perfilpic"
+          alt="perfilpicture"
         />
 
         <input
@@ -49,7 +49,7 @@ export default function AvatarInput() {
           accept="image/*"
           id="avatar"
           data-file={file}
-          onChange={handleChange}
+          onChange={handleChangeImage}
           ref={ref}
         />
       </label>

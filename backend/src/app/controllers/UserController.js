@@ -34,6 +34,10 @@ class UserController {
     return res.json({ id, name, email, provider });
   }
 
+  async delete(req, res) {
+    return res.json({});
+  }
+
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
@@ -50,7 +54,7 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Update validation failed' });
+      return res.status(400).json({ error: 'Validation fails' });
     }
 
     const { email, oldPassword } = req.body;
@@ -88,10 +92,6 @@ class UserController {
       email,
       avatar,
     });
-  }
-
-  async delete(req, res) {
-    return res.json({});
   }
 }
 export default new UserController();
