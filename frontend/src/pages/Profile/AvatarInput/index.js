@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from 'react';
 import { useField } from '@rocketseat/unform';
 import { Container } from './styles';
@@ -5,9 +6,10 @@ import api from '~/services/api';
 
 export default function AvatarInput() {
   const { defaultValue, registerField } = useField('avatar');
-
+  
   const [file, setFile] = useState(defaultValue && defaultValue.id);
   const [preview, setPreview] = useState(defaultValue && defaultValue.url);
+
 
   const ref = useRef();
 
@@ -40,7 +42,7 @@ export default function AvatarInput() {
           src={
             preview || 'https://api.adorable.io/avatars/180/abott@adorable.png'
           }
-          alt="perfilpicture"
+          alt="avatarperfil"
         />
 
         <input
