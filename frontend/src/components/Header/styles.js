@@ -12,23 +12,20 @@ export const Content = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   nav {
     display: flex;
     align-items: center;
-
     img {
       margin-right: 20px;
       padding-right: 20px;
       border-right: 1px solid #eee;
     }
-
     a {
       font-weight: bold;
       color: #7159c1;
+      text-transform: uppercase;
     }
   }
-
   aside {
     display: flex;
     align-items: center;
@@ -39,17 +36,14 @@ export const Profile = styled.div`
   display: flex;
   margin-left: 20px;
   padding-left: 20px;
-  border-left: 1px solid #eee
-
+  border-left: 1px solid #eee;
   div {
     text-align: right;
     margin-right: 10px;
-
     strong {
       display: block;
       color: #333;
     }
-
     a {
       display: block;
       margin-top: 2px;
@@ -57,9 +51,9 @@ export const Profile = styled.div`
       color: #999;
     }
   }
-
   img {
-      height: 32px;
-      border-radius: 50%
-    }
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
 `;
