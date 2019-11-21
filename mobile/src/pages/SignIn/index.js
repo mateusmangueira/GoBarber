@@ -7,15 +7,7 @@ import Background from '~/components/Background';
 
 import { Container, Form, FormInput, SubmitButton, SignLink, SignLinkText } from './styles';
 
-export default function SignIn() {
-
-  async function handleSingUp() {
-
-  }
-
-  async function handleSubmit() {
-
-  }
+export default function SignIn({ navigation }) {
 
   return (
     <Background>
@@ -39,9 +31,9 @@ export default function SignIn() {
             Entrar
           </SubmitButton>
         </Form>
-        <SignLink onPress={() => { handleSingUp }}>
+        <SignLink onPress={() => navigation.navigate('SignUp')}>
           <SignLinkText>
-            Criar sua conta gratuita
+           Crie sua conta aqui
           </SignLinkText>
         </SignLink>
       </Container>

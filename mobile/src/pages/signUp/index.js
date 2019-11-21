@@ -7,18 +7,16 @@ import Background from '~/components/Background';
 
 import { Container, Form, FormInput, SubmitButton, SignLink, SignLinkText } from './styles';
 
-export default function SignIn() {
+export default function SignUp({ navigation }) {
   return (
     <Background>
       <Container>
         <Image source={logo} />
         <Form>
-        <FormInput
-            icon="name-outline"
-            keyboardType="email-address"
+          <FormInput
+            icon="person-outline"
             autoCorrect={false}
-            autoCapitalize="none"
-            placeholder="Digite seu e-mail"
+            placeholder="Seu nome completo"
           />
 
           <FormInput
@@ -26,22 +24,22 @@ export default function SignIn() {
             keyboardType="email-address"
             autoCorrect={false}
             autoCapitalize="none"
-            placeholder="Digite seu e-mail"
+            placeholder="Seu melhor e-mail"
           />
 
           <FormInput
             icon="lock-outline"
             secureTextEntry
-            placeholder="Sua senha segura"
+            placeholder="Sua senha mais segura"
           />
 
           <SubmitButton onPress={() => { }}>
             Entrar
           </SubmitButton>
         </Form>
-        <SignLink onPress={() => { }}>
+        <SignLink onPress={() => navigation.navigate('SignIn')}>
           <SignLinkText>
-            Criar sua conta gratuita
+            Já possui conta?
           </SignLinkText>
         </SignLink>
       </Container>
