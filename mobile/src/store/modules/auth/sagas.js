@@ -1,8 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
+import { Alert } from 'react-native';
 import { signInSuccess, signFailure } from './actions';
 import api from '~/services/api';
-import history from '~/services/history';
 
 export function* signIn({ payload }) {
   try {
@@ -15,8 +14,8 @@ export function* signIn({ payload }) {
 
     const { token, user } = response.data;
 
-    if (!user.provider) {
-      toast.error('Usuário não é prestador de serviços.');
+    if (user.provider) {
+      Alert.alert('Erro no login', 'Você é prestador de serviço, utilize a versão GoBarber Web.');
       return;
     }
 
@@ -24,9 +23,9 @@ export function* signIn({ payload }) {
 
     yield put(signInSuccess(token, user));
 
-    history.push('/dashboard');
+    //history.push('/dashboard');
   } catch (err) {
-    toast.error('E-mail ou senha incorretos.');
+    Alert.alert('Falha na autenticação', 'E-mail ou senha incorretos.');
     yield put(signFailure());
   }
 }
@@ -42,9 +41,9 @@ export function* signUp({ payload }) {
       provider: true,
     });
 
-    history.push('/');
+    //history.push('/');
   } catch (err) {
-    toast.error('Falha no cadastro. Verifique os seus dados');
+    Alert.alert('Falha no cadastro', 'Erro no cadastro. Verifique seus dados');
     yield put(signFailure());
   }
 }
@@ -60,8 +59,8 @@ export function setToken({ payload }) {
 }
 
 export function signOut() {
-  history.push('/');
-  toast.info('Sessão encerrada com sucesso.');
+  //history.push('/');
+  Alert.prompt('Logout realizado','Sessão encerrada com sucesso.');
 }
 
 export default all([
