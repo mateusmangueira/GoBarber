@@ -4,8 +4,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import '~/config/ReactotronConfig';
 
-import Routes from '~/routes';
-
 import { store, persistor } from '~/store';
 import App from './App';
 
