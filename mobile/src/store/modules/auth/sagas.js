@@ -25,7 +25,6 @@ export function* signIn({ payload }) {
 
     yield put(signInSuccess(token, user));
 
-    //history.push('/dashboard');
   } catch (err) {
     Alert.alert('Falha na autenticação', 'E-mail ou senha incorretos.');
     yield put(signFailure());
@@ -42,7 +41,6 @@ export function* signUp({ payload }) {
       password,
     });
 
-    //history.push('/');
   } catch (err) {
     Alert.alert('Falha no cadastro', 'Erro no cadastro. Verifique seus dados');
     yield put(signFailure());
@@ -59,13 +57,8 @@ export function setToken({ payload }) {
   }
 }
 
-export function signOut() {
-  Alert.alert('Logout realizado', 'Sessão encerrada com sucesso.');
-}
-
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
   takeLatest('@auth/SIGN_UP_REQUEST', signUp),
-  takeLatest('@auth/SIGN_OUT', signOut),
 ]);
