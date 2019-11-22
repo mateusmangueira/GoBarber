@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Background from '~/components/Background';
 // import { Container } from './styles';
 
-export default function NewSchedule() {
+export default function New() {
   return (
     <Background>
 
@@ -14,6 +14,6 @@ export default function NewSchedule() {
 NewSchedule.navigationOptions = {
   tabBarLabel: 'Agendar',
   tabBarIcon: ({ tintColor }) => (
-    <Icon name="event" size={20} color={tintColor} />
+    <Icon name="add-plus" size={20} color={tintColor} />
   ),
 };
