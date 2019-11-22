@@ -60,8 +60,7 @@ export function setToken({ payload }) {
 }
 
 export function signOut() {
-  //history.push('/');
-  Alert.prompt('Logout realizado', 'Sessão encerrada com sucesso.');
+  Alert.alert('Logout realizado', 'Sessão encerrada com sucesso.');
 }
 
 export default all([

@@ -23,7 +23,7 @@ export const Title = styled.Text`
 
 export const Form = styled.ScrollView.attrs({
   showsVerticalScrollIndicator: false,
-  contentContainerStyle: {padding: 30},
+  contentContainerStyle: { padding: 30 },
 })`
   align-self: stretch;
   margin-top: 50px;
@@ -35,6 +35,12 @@ export const FormInput = styled(Input)`
 
 export const SubmitButton = styled(Button)`
   margin-top: 5px;
+`;
+
+export const LogoutButton = styled(Button)`
+  margin-top: 10px;
+  background: #f64c75;
+
 `;
 
 
