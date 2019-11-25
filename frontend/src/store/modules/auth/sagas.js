@@ -1,4 +1,4 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, delay } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 import { signInSuccess, signFailure } from './actions';
 import api from '~/services/api';
@@ -16,12 +16,14 @@ export function* signIn({ payload }) {
     const { token, user } = response.data;
 
     if (!user.provider) {
-      toast.error('Usuário não é prestador de serviços.');
+      toast.error('Você não é prestador de serviço, utilize o aplicativo GoBarber.');
+      yield put(signFailure());
       return;
     }
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
+    yield delay(750);
     yield put(signInSuccess(token, user));
 
     history.push('/dashboard');
@@ -43,6 +45,7 @@ export function* signUp({ payload }) {
     });
 
     history.push('/');
+
   } catch (err) {
     toast.error('Falha no cadastro. Verifique os seus dados');
     yield put(signFailure());
