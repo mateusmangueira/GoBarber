@@ -46,7 +46,7 @@ class AppointmentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({ error: 'Appointment validation failed' });
     }
 
     const { provider_id, date } = req.body;
@@ -62,9 +62,9 @@ class AppointmentController {
     }
 
     if (req.userId === provider_id) {
-      return res
-        .status(401)
-        .json({ error: "Providers can't create appointments with themselves" });
+      return res.status(401).json({
+        error: 'Providers cannot create appointments with themselves',
+      });
     }
 
     const hourStart = startOfHour(parseISO(date));
@@ -124,7 +124,7 @@ class AppointmentController {
 
     if (!appointment) {
       return res.status(401).json({
-        error: "Appointment not found, so it can't be canceled",
+        error: 'Appointment not found, so it cannot be canceled',
       });
     }
 

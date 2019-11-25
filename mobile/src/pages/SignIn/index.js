@@ -7,10 +7,16 @@ import logo from '~/assets/logo.png';
 import Background from '~/components/Background';
 import { signInRequest } from '~/store/modules/auth/actions';
 
-import { Container, Form, FormInput, SubmitButton, SignLink, SignLinkText } from './styles';
+import {
+  Container,
+  Form,
+  FormInput,
+  SubmitButton,
+  SignLink,
+  SignLinkText,
+} from './styles';
 
 export default function SignIn({ navigation }) {
-
   const dispatch = useDispatch();
   const passwordRef = useRef();
 
@@ -52,13 +58,14 @@ export default function SignIn({ navigation }) {
             onChangeText={setPassword}
           />
 
-          <SubmitButton loading={loading} onPress={handleSubmit}>Entrar</SubmitButton>
+          <SubmitButton loading={loading} onPress={handleSubmit}>
+            Entrar
+          </SubmitButton>
         </Form>
 
         <SignLink onPress={() => navigation.navigate('SignUp')}>
           <SignLinkText>Crie sua conta aqui</SignLinkText>
         </SignLink>
-
       </Container>
     </Background>
   );

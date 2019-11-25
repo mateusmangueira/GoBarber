@@ -4,23 +4,30 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Background from '~/components/Background';
 import { updateProfileRequest } from '~/store/modules/user/actions';
 import { signOut } from '~/store/modules/auth/actions';
-import { Container, Title, Form, FormInput, Separator, SubmitButton, LogoutButton } from './styles';
+import {
+  Container,
+  Title,
+  Form,
+  FormInput,
+  Separator,
+  SubmitButton,
+  LogoutButton,
+} from './styles';
 
 export default function Profile() {
-
   const profile = useSelector(state => state.user.profile);
   const dispatch = useDispatch();
 
   const emailRef = useRef();
   const oldPasswordRef = useRef();
   const passwordRef = useRef();
-  const confirmPasswordRef = useRef()
+  const confirmPasswordRef = useRef();
 
-  const [name, setName] = useState(profile.name)
-  const [email, setEmail] = useState(profile.email)
-  const [oldPassword, setOldPassword] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [name, setName] = useState(profile.name);
+  const [email, setEmail] = useState(profile.email);
+  const [oldPassword, setOldPassword] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
     setOldPassword('');
@@ -36,7 +43,8 @@ export default function Profile() {
         oldPassword,
         password,
         confirmPassword,
-      }));
+      })
+    );
   }
 
   function handleLogout() {
@@ -108,7 +116,6 @@ export default function Profile() {
 
           <SubmitButton onPress={handleSubmit}>Atualizar perfil</SubmitButton>
           <LogoutButton onPress={handleLogout}>Encerrar sessão</LogoutButton>
-
         </Form>
       </Container>
     </Background>
@@ -120,5 +127,4 @@ Profile.navigationOptions = {
   tabBarIcon: ({ tintColor }) => (
     <Icon name="person" size={20} color={tintColor} />
   ),
-
-}
+};

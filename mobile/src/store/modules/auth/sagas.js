@@ -15,7 +15,10 @@ export function* signIn({ payload }) {
     const { token, user } = response.data;
 
     if (user.provider) {
-      Alert.alert('Erro no login', 'Você é prestador de serviço, utilize a versão GoBarber Web.');
+      Alert.alert(
+        'Erro no login',
+        'Você é prestador de serviço, utilize a versão GoBarber Web.'
+      );
       return;
     }
 
@@ -24,7 +27,6 @@ export function* signIn({ payload }) {
     yield delay(750);
 
     yield put(signInSuccess(token, user));
-
   } catch (err) {
     Alert.alert('Falha na autenticação', 'E-mail ou senha incorretos.');
     yield put(signFailure());
@@ -40,9 +42,8 @@ export function* signUp({ payload }) {
       email,
       password,
     });
-
   } catch (err) {
-    Alert.alert('Falha no cadastro', 'Erro no cadastro. Verifique seus dados');
+    Alert.alert('Falha no cadastro', 'Erro no cadastro, verifique seus dados');
     yield put(signFailure());
   }
 }

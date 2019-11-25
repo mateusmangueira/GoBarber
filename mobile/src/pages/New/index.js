@@ -4,16 +4,12 @@ import Background from '~/components/Background';
 // import { Container } from './styles';
 
 export default function New() {
-  return (
-    <Background>
-
-    </Background>
-  );
+  return <Background />;
 }
 
-NewSchedule.navigationOptions = {
+New.navigationOptions = {
   tabBarLabel: 'Agendar',
   tabBarIcon: ({ tintColor }) => (
-    <Icon name="add-plus" size={20} color={tintColor} />
+    <Icon name="event" size={20} color={tintColor} />
   ),
 };

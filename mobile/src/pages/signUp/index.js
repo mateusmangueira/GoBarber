@@ -8,7 +8,14 @@ import Background from '~/components/Background';
 
 import { signUpRequest } from '~/store/modules/auth/actions';
 
-import { Container, Form, FormInput, SubmitButton, SignLink, SignLinkText } from './styles';
+import {
+  Container,
+  Form,
+  FormInput,
+  SubmitButton,
+  SignLink,
+  SignLinkText,
+} from './styles';
 
 export default function SignUp({ navigation }) {
   const dispatch = useDispatch();
@@ -16,14 +23,14 @@ export default function SignUp({ navigation }) {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const loading = useSelector(state => state.auth.loading);
 
   function handleSubmit() {
-    dispatch(signUpRequest(name, email, password))
+    dispatch(signUpRequest(name, email, password));
   }
 
   return (
@@ -31,7 +38,6 @@ export default function SignUp({ navigation }) {
       <Container>
         <Image source={logo} />
         <Form>
-
           <FormInput
             icon="person-outline"
             autoCorrect={false}
@@ -66,8 +72,9 @@ export default function SignUp({ navigation }) {
             onChangeText={setPassword}
           />
 
-          <SubmitButton loading={loading} onPress={handleSubmit}>Criar conta</SubmitButton>
-
+          <SubmitButton loading={loading} onPress={handleSubmit}>
+            Criar conta
+          </SubmitButton>
         </Form>
         <SignLink onPress={() => navigation.navigate('SignIn')}>
           <SignLinkText>Já possui conta?</SignLinkText>

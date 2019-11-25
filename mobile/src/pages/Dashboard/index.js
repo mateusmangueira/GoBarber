@@ -7,9 +7,7 @@ import { Container, Title, List } from './styles';
 
 import api from '~/services/api';
 
-
 export default function Dashboard() {
-
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
@@ -20,7 +18,6 @@ export default function Dashboard() {
     }
 
     loadAppointments();
-
   }, []);
 
   async function handleCancel(id) {
@@ -30,25 +27,25 @@ export default function Dashboard() {
       appointments.map(appointment =>
         appointment.id === id
           ? {
-            ...appointment,
-            canceled_at: response.data.canceled_at,
-          }
+              ...appointment,
+              canceled_at: response.data.canceled_at,
+            }
           : appointment
       )
-    )
+    );
   }
 
   return (
     <Background>
       <Container>
-        <Title>
-          Agendamentos
-        </Title>
+        <Title>Agendamentos</Title>
 
         <List
           data={appointments}
           keyExtractor={item => String(item.id)}
-          renderItem={({ item }) => <Appointment onCancel={() => handleCancel(item.id)} data={item} />}
+          renderItem={({ item }) => (
+            <Appointment onCancel={() => handleCancel(item.id)} data={item} />
+          )}
         />
       </Container>
     </Background>

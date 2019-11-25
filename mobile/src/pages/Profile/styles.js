@@ -12,7 +12,6 @@ export const Separator = styled.View`
   margin: 20px 0 30px;
 `;
 
-
 export const Title = styled.Text`
   font-size: 20px;
   color: #fff;
@@ -40,7 +39,4 @@ export const SubmitButton = styled(Button)`
 export const LogoutButton = styled(Button)`
   margin-top: 10px;
   background: #f64c75;
-
 `;
-
-

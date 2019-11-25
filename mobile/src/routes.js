@@ -5,33 +5,36 @@ import SignIn from '~/pages/SignIn';
 import SignUp from '~/pages/SignUp';
 import Dashboard from '~/pages/Dashboard';
 import Profile from '~/pages/Profile';
-import NewSchedule from '~/pages/NewSchedule';
-
+import NewSchedule from '~/pages/New';
 
 export default (signedIn = false) =>
   createAppContainer(
-    createSwitchNavigator({
-      Sign: createSwitchNavigator({
-        SignIn,
-        SignUp,
-      }),
-      App: createBottomTabNavigator(
-        {
-          Dashboard,
-          NewSchedule,
-          Profile,
-        },
-        {
-          tabBarOptions: {
-            keyboardHidesTabBar: true,
-            activeTintColor: '#FFF',
-            inactiveTintColor: 'rgba(255, 255, 255, 0.6)',
-            style: {
-              backgroundColor: '#8d41a8'
-            },
-          },
+    createSwitchNavigator(
+      {
+        Sign: createSwitchNavigator({
+          SignIn,
+          SignUp,
         }),
-    }, {
-      initialRouteName: signedIn ? 'App' : 'Sign'
-    }),
+        App: createBottomTabNavigator(
+          {
+            Dashboard,
+            NewSchedule,
+            Profile,
+          },
+          {
+            tabBarOptions: {
+              keyboardHidesTabBar: true,
+              activeTintColor: '#FFF',
+              inactiveTintColor: 'rgba(255, 255, 255, 0.6)',
+              style: {
+                backgroundColor: '#8d41a8',
+              },
+            },
+          }
+        ),
+      },
+      {
+        initialRouteName: signedIn ? 'App' : 'Sign',
+      }
+    )
   );
