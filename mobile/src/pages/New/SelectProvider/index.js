@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import api from '~/services/api';
@@ -24,7 +25,6 @@ export default function SelectProvider({ navigation }) {
     async function loadProviders() {
       const response = await api.get('providers');
 
-      /** Fill remaining providers */
       const remainingProvidersToRow = response.data.length % numColumns;
       if (remainingProvidersToRow > 0)
         await [...Array(numColumns)].forEach((_, i) => {
@@ -65,7 +65,7 @@ export default function SelectProvider({ navigation }) {
                       uri: provider.avatar
                         ? provider.avatar.url.replace(
                             'localhost',
-                            '192.168.15.10'
+                            '10.0.2.2'
                           )
                         : `https://api.adorable.io/avatar/50/${provider.name}.png`,
                     }}
