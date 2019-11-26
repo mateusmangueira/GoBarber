@@ -42,6 +42,9 @@ export function* signUp({ payload }) {
       email,
       password,
     });
+
+    Alert.alert('Sucesso!', 'Sua conta foi criada.');
+
   } catch (err) {
     Alert.alert('Falha no cadastro', 'Erro no cadastro, verifique seus dados');
     yield put(signFailure());
