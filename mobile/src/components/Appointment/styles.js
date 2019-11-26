@@ -10,7 +10,7 @@ export const Container = styled.View`
   align-items: center;
   justify-content: space-between;
 
-  opacity: ${props => (props.past ? 0.5 : 1)}
+  opacity: ${props => (props.past ? 0.5 : 1)};
 `;
 
 export const Left = styled.View`
@@ -40,4 +40,3 @@ export const Time = styled.Text`
   font-size: 13px;
   margin-top: 4px;
 `;
-
