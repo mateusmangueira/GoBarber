@@ -35,7 +35,10 @@ export default function Confirm({ navigation }) {
         <Avatar
           source={{
             uri: provider.avatar
-              ? provider.avatar.url.replace('localhost', '192.168.15.10')
+              ? provider.avatar.url.replace(
+                'localhost',
+                '10.0.2.2'
+              )
               : `https://api.adorable.io/avatar/50/${provider.name}.png`,
           }}
         />

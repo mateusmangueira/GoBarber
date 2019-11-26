@@ -1,14 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import { RefreshControl } from 'react-native';
 import Background from '~/components/Background';
 import Appointment from '~/components/Appointment';
 import { Container, Title, List } from './styles';
 
 import api from '~/services/api';
 
+function wait(timeout) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
+
 export default function Dashboard() {
   const [appointments, setAppointments] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(900).then(() => setRefreshing(false));
+  }, [refreshing]);
 
   useEffect(() => {
     async function loadAppointments() {
@@ -18,7 +31,7 @@ export default function Dashboard() {
     }
 
     loadAppointments();
-  }, []);
+  }, [onRefresh]);
 
   async function handleCancel(id) {
     const response = await api.delete(`appointments/${id}`);
@@ -41,6 +54,9 @@ export default function Dashboard() {
         <Title>Agendamentos</Title>
 
         <List
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           data={appointments}
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
