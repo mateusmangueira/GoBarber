@@ -1,3 +1,3 @@
-# GoBarber
+# GoBarber App
 
-Projeto prático do Bootcamp Rocketseat 2019
+Aplicativo Mobile Go Barber
